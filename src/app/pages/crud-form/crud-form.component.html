@@ -1,4 +1,10 @@
 <div class="main">
+    <ng-template #loading>
+        <div class="loading-spinner">
+            <mat-spinner></mat-spinner>
+        </div>
+    </ng-template>
+    <div *ngIf="!isLoading; else loading">
     <div *ngIf="!isEditMode && !isViewMode" class="main-width">
         <form [formGroup]="profissionalForm">
             <div class="card">
@@ -89,6 +95,14 @@
             </div>
         </section>
     </div>
+</div>
+
+<ng-template #loading>
+    <div class="loading-spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+<div *ngIf="!isLoading; else loading">
     <div *ngIf="isEditMode" class="main-width">
         <form [formGroup]="profissionalForm">
             <div class="card">
@@ -179,6 +193,14 @@
             </div>
         </section>
     </div>
+</div>
+
+<ng-template #loading>
+    <div class="loading-spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+<div *ngIf="!isLoading; else loading">
     <div *ngIf="isViewMode" class="main-width">
         <form [formGroup]="profissionalForm">
             <div class="card">
@@ -254,6 +276,7 @@
                 </div>
             </div>
         </form>
+
         <section class="footer-buttons">
             <div>
                 <button mat-fab extended color="tertiary" [routerLink]="['/crud-list']">
@@ -262,5 +285,6 @@
                 </button>
             </div>
         </section>
+    </div>
     </div>
 </div>

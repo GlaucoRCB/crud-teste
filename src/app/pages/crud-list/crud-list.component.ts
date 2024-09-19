@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { Profissional } from '../../profissional';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-crud-list',
@@ -18,7 +20,9 @@ import { Profissional } from '../../profissional';
     MatButtonModule,
     RouterLink,
     MatPaginatorModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    NgIf
   ],
   templateUrl: './crud-list.component.html',
   styleUrl: './crud-list.component.scss'
@@ -28,11 +32,13 @@ export class CrudListComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['name', 'specialty', 'crm', 'phone', 'status', 'actions'];
   dataSource = new MatTableDataSource<Profissional>([]);
+  isLoading: boolean = true;
+
 
   constructor(private crudService: CrudService, private snackBar: MatSnackBar, private router: Router) { }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   ngOnInit() {
@@ -40,7 +46,10 @@ export class CrudListComponent implements AfterViewInit {
   }
 
   async loadProfissionais() {
+    this.isLoading = true;
     this.dataSource.data = await this.crudService.getAllDatas();
+    this.isLoading = false; 
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   async viewProfissional(id: string) {
@@ -51,6 +60,7 @@ export class CrudListComponent implements AfterViewInit {
   }
 
   async deleteProfissional(id: string) {
+    this.isLoading = true;
     await this.crudService.deleteData(id);
     this.snackBar.open('Profissional deletado!', 'Fechar', {
       duration: 3000,

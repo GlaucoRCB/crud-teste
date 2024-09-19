@@ -58,3 +58,17 @@ table {
     width: 100%;
     min-width: 600px; 
 }
+
+.loading-spinner {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw; 
+  height: 100vh; 
+  background-color: rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  z-index: 9999;
+}
+

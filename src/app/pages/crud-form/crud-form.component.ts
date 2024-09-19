@@ -12,12 +12,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormArray, FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgFor } from '@angular/common';
 import { NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Profissional } from '../../profissional';
 import { CrudService } from '../../services/crud.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-crud-form',
@@ -38,7 +39,8 @@ import { CrudService } from '../../services/crud.service';
     MatIconModule,
     MatButtonModule,
     NgFor,
-    NgIf
+    NgIf,
+    MatProgressSpinnerModule
   ],
   templateUrl: './crud-form.component.html',
   styleUrl: './crud-form.component.scss'
@@ -49,6 +51,7 @@ export class CrudFormComponent {
   profissionalId!: string | null;
   isEditMode: boolean = false;
   isViewMode: boolean = false;
+  isLoading: boolean = false;
 
   specialties = [
     { especialidade: 'Pediatria' },
@@ -78,6 +81,7 @@ export class CrudFormComponent {
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+
     this.profissionalForm = this.fb.group({
       nome: ['', Validators.required],
       especialidade: ['', Validators.required],
@@ -101,12 +105,14 @@ export class CrudFormComponent {
       if (viewMode) {
         this.isViewMode = true;
         this.loadProfissionalData(id);
+        this.profissionalForm.disable();
       }
       else {
         this.isEditMode = true;
         this.loadProfissionalData(id);
       }
     }
+  
   }
 
   private addCheckboxes() {
@@ -116,8 +122,8 @@ export class CrudFormComponent {
     });
   }
 
-
   async loadProfissionalData(id: string) {
+    this.isLoading = true;
     const profissional = await this.crudService.getData(id);
     if (profissional) {
       this.profissionalForm.patchValue({
@@ -134,6 +140,7 @@ export class CrudFormComponent {
 
       this.setCheckboxes(profissional.diasAtendimento);
     }
+    this.isLoading = false;
   }
 
   private setCheckboxes(diasAtendimento: boolean[]) {

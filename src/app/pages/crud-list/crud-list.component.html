@@ -1,6 +1,6 @@
 <div class="main">
     <section class="grid template-column-12">
-        <div class="span12 table-item">
+        <div *ngIf="!isLoading; else loading" class="span12 table-item">
             <section class="section-title">
                 <h3>Lista de Profissionais</h3>
             </section>
@@ -48,7 +48,7 @@
                             </button>
                         </td>
                     </ng-container>
-
+                    
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
@@ -57,6 +57,13 @@
         </div>
     </section>
 </div>
+
+<ng-template #loading>
+    <div class="loading-spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+
 
 <div class="floating-button">
     <button mat-mini-fab color="primary" [routerLink]="['/crud-form']" matTooltip="Novo Profissional"

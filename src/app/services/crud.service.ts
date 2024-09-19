@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { addDoc, getDoc, getDocs, updateDoc, deleteDoc, Firestore, collection, CollectionReference, doc } from '@angular/fire/firestore';
 import { Profissional } from '../profissional';
 
-
 @Injectable({ providedIn: 'root' })
 export class CrudService {
 
