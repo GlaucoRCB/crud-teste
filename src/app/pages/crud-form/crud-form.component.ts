@@ -74,6 +74,7 @@ export class CrudFormComponent {
     { name: 'Domingo' },
   ];
 
+
   constructor(
     private fb: FormBuilder,
     private crudService: CrudService,
@@ -155,6 +156,34 @@ export class CrudFormComponent {
 
   async saveForm() {
 
+    const profissionais = await this.crudService.getAllDatas();
+
+    const emailExist = profissionais.some((profissional: Profissional) =>
+      profissional.email === this.profissionalForm.get('email')?.value && 
+      (!this.profissionalId || this.profissionalId !== profissional.id)
+    );
+
+    if (emailExist) {
+      this.snackBar.open('Este Email já está sendo utilizado!', 'Fechar', {
+        duration: 3000,
+        panelClass: ['snackbar-error']
+      });
+      return;
+    }
+
+    const crmExist = profissionais.some((profissional: Profissional) =>
+      profissional.crm === this.profissionalForm.get('crm')?.value && 
+      (!this.profissionalId || this.profissionalId !== profissional.id)
+    );
+
+    if (crmExist) {
+      this.snackBar.open('Este crm já está sendo utilizado!', 'Fechar', {
+        duration: 3000,
+        panelClass: ['snackbar-error']
+      });
+      return;
+    }
+
     if (this.profissionalForm.invalid) {
       this.snackBar.open('Preencha todos os campos obrigatórios!', 'Fechar', {
         duration: 3000,
@@ -163,6 +192,7 @@ export class CrudFormComponent {
       this.profissionalForm.markAllAsTouched();
       return;
     }
+
     const profissionalData = this.profissionalForm.value as Profissional;
 
     if (profissionalData.dataContrato instanceof Date) {
@@ -174,7 +204,9 @@ export class CrudFormComponent {
       this.snackBar.open('Profissional editado!', 'Fechar', {
         duration: 3000,
       });
-    } else {
+    } 
+    
+    else {
       await this.crudService.createData(profissionalData);
       this.snackBar.open('Profissional cadastrado com sucesso!', 'Fechar', {
         duration: 3000,
