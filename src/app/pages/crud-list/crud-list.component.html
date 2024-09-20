@@ -43,12 +43,11 @@
                                 <mat-icon>edit</mat-icon>
                             </button>
                             <button mat-icon-button color="warn" matTooltip="Excluir" matTooltipPosition="below"
-                                (click)="deleteProfissional(element.id)">
+                                (click)="deleteProfissional(element)">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </td>
                     </ng-container>
-                    
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
@@ -63,7 +62,6 @@
         <mat-spinner></mat-spinner>
     </div>
 </ng-template>
-
 
 <div class="floating-button">
     <button mat-mini-fab color="primary" [routerLink]="['/crud-form']" matTooltip="Novo Profissional"

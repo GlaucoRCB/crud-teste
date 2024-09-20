@@ -10,6 +10,8 @@ import { CrudService } from '../../services/crud.service';
 import { Profissional } from '../../profissional';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgIf } from '@angular/common';
+import { MatDialog, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
+import { AlertComponent } from '../../components/alert/alert.component';
 
 @Component({
   selector: 'app-crud-list',
@@ -22,7 +24,11 @@ import { NgIf } from '@angular/common';
     MatPaginatorModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    NgIf
+    NgIf,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogTitle,
+    MatDialogContent,
   ],
   templateUrl: './crud-list.component.html',
   styleUrl: './crud-list.component.scss'
@@ -35,7 +41,7 @@ export class CrudListComponent implements AfterViewInit {
   isLoading: boolean = true;
 
 
-  constructor(private crudService: CrudService, private snackBar: MatSnackBar, private router: Router) { }
+  constructor(private crudService: CrudService, private snackBar: MatSnackBar, private router: Router, public dialog: MatDialog) { }
 
   ngAfterViewInit(): void {
     setTimeout(() => this.dataSource.paginator = this.paginator);
@@ -48,7 +54,7 @@ export class CrudListComponent implements AfterViewInit {
   async loadProfissionais() {
     this.isLoading = true;
     this.dataSource.data = await this.crudService.getAllDatas();
-    this.isLoading = false; 
+    this.isLoading = false;
     setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
@@ -59,13 +65,17 @@ export class CrudListComponent implements AfterViewInit {
     }
   }
 
-  async deleteProfissional(id: string) {
-    this.isLoading = true;
-    await this.crudService.deleteData(id);
-    this.snackBar.open('Profissional deletado!', 'Fechar', {
-      duration: 3000,
+  async deleteProfissional(profissional: Profissional) {
+    const dialogRef = this.dialog.open(AlertComponent, { width: '400px', data: profissional.nome });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result as unknown as boolean) {
+        this.isLoading = true;
+        this.crudService.deleteData(profissional.id);
+        this.snackBar.open('Profissional deletado!', 'Fechar', {
+          duration: 3000,
+        });
+        this.loadProfissionais();
+      }
     });
-    this.loadProfissionais();
   }
-
 }
